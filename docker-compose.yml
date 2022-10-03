@@ -1,0 +1,47 @@
+version: '3.7'
+services:
+  database:
+    container_name: wwgt-diary-db
+    image: mysql
+    networks:
+      - default
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: mysqladmin ping -h $$MYSQL_HOST -u$$MYSQL_USER -p$$MYSQL_PASSWORD
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+      - ./docker/db/logs:/var/log/mysql
+  migrate:
+    image: migrate/migrate
+    container_name: db_migrations
+    networks:
+      - default
+    command: -path=/migrations -database mysql://$MYSQL_USER:$MYSQL_PASSWORD@tcp\($MYSQL_HOST:$MYSQL_PORT\)/$MYSQL_DATABASE?multiStatements=true up
+    volumes:
+      - ./migrations:/migrations
+    depends_on:
+      database:
+        condition: service_healthy
+    env_file:
+      - .env
+  server:
+    container_name: wwgt-diary-server
+    build:
+      context: .
+      dockerfile: docker/server/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - default
+    ports:
+      - "8080:8080"
