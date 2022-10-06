@@ -1,7 +1,7 @@
 FROM golang:1.17
 
 WORKDIR /wwgt-diary-server
-COPY backend/go.mod .
+COPY backend/go.mod backend/go.sum ./
 RUN go mod download
 COPY backend .
 
