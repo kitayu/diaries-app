@@ -16,12 +16,6 @@ type config struct {
 
 func init() {
 	Config = &config{
-		// DBUsername: os.Getenv("POSTGRES_USER"),
-		// DBPassword: os.Getenv("POSTGRES_PASSWORD"),
-		// DBName:     os.Getenv("POSTGRES_DATABASE"),
-		// DBHost:     os.Getenv("POSTGRES_HOST"),
-		// DBPort:     os.Getenv("POSTGRES_PORT"),
-		// ServerPort: os.Getenv("SERVER_PORTS"),
 		DBUsername: os.Getenv("MYSQL_USER"),
 		DBPassword: os.Getenv("MYSQL_PASSWORD"),
 		DBName:     os.Getenv("MYSQL_DATABASE"),
