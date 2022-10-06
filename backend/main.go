@@ -7,11 +7,12 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/kitayu/go-diaries/config"
+	db "github.com/kitayu/go-diaries/infrastructure/db"
+	server "github.com/kitayu/go-diaries/infrastructure/server"
 )
 
 type Diary struct {
@@ -26,7 +27,7 @@ type DiaryRequest struct {
 }
 
 func main() {
-	conn, err := NewDB()
+	conn, err := db.NewDB()
 	if err != nil {
 		log.Fatalf("Failed to initialize the database: %v", err)
 	}
@@ -39,32 +40,10 @@ func main() {
 	r.Handle("/diary/{id}", getDiary(conn)).Methods("GET")
 	r.Handle("/diaries", getDiaryList(conn)).Methods("GET")
 
-	srv := NewServer(r)
+	srv := server.NewServer(r)
 
 	log.Printf("Serving on localhost:%v\n", config.Config.ServerPort)
 	log.Fatal(srv.ListenAndServe())
-}
-
-func NewDB() (*sql.DB, error) {
-	c := config.Config
-	dsn := fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s",
-		c.DBUsername, c.DBPassword, c.DBHost, c.DBPort, c.DBName)
-	conn, err := sql.Open("mysql", dsn)
-	if err != nil {
-		return nil, err
-	}
-	return conn, nil
-}
-
-func NewServer(handler http.Handler) *http.Server {
-	c := config.Config
-	return &http.Server{
-		Handler:      handler,
-		Addr:         fmt.Sprintf("0.0.0.0:%s", c.ServerPort),
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
-	}
 }
 
 func addDiary(db *sql.DB) http.Handler {
