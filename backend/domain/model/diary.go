@@ -1,7 +1,7 @@
 package model
 
 type Diary struct {
-	ID          int
+	ID          int64
 	Title       string
 	Description string
 }

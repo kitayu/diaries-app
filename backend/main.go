@@ -11,15 +11,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/kitayu/go-diaries/config"
+	model "github.com/kitayu/go-diaries/domain/model"
 	db "github.com/kitayu/go-diaries/infrastructure/db"
 	server "github.com/kitayu/go-diaries/infrastructure/server"
+	repository "github.com/kitayu/go-diaries/interface/repository"
 )
-
-type Diary struct {
-	ID          int    `db:"id"`
-	Title       string `db:"title"`
-	Description string `db:"description"`
-}
 
 type DiaryRequest struct {
 	Title       string `json:"title"`
@@ -55,11 +51,12 @@ func addDiary(db *sql.DB) http.Handler {
 			return
 		}
 
-		_, err := db.Exec(
-			"INSERT INTO diaries(title, description) VALUES (?, ?)",
-			input.Title,
-			input.Description,
-		)
+		dr := repository.NewDiaryRepository(db)
+		d := &model.Diary{
+			Title:       input.Title,
+			Description: input.Description,
+		}
+		_, err := dr.Store(r.Context(), d)
 
 		if err != nil {
 			log.Fatalf("diariesの登録に失敗しました。 %v", err)
@@ -85,12 +82,13 @@ func editDiary(db *sql.DB) http.Handler {
 			return
 		}
 
-		_, err = db.Exec(
-			"UPDATE diaries SET title = ?, description = ? WHERE id = ?",
-			input.Title,
-			input.Description,
-			ID,
-		)
+		dr := repository.NewDiaryRepository(db)
+		d := &model.Diary{
+			ID:          int64(ID),
+			Title:       input.Title,
+			Description: input.Description,
+		}
+		_, err = dr.Update(r.Context(), d)
 
 		if err != nil {
 			log.Fatalf("diariesの更新に失敗しました。 %v", err)
@@ -110,10 +108,8 @@ func deleteDiary(db *sql.DB) http.Handler {
 			return
 		}
 
-		_, err = db.Exec(
-			"DELETE FROM diaries WHERE id = ?",
-			ID,
-		)
+		dr := repository.NewDiaryRepository(db)
+		err = dr.Delete(r.Context(), int64(ID))
 
 		if err != nil {
 			log.Fatalf("diariesの削除に失敗しました。 %v", err)
@@ -133,14 +129,11 @@ func getDiary(db *sql.DB) http.Handler {
 			return
 		}
 
-		rows := db.QueryRow(
-			"SELECT id, title, description FROM diaries WHERE id = ?",
-			ID,
-		)
-		var diary Diary
-		if err = rows.Scan(&diary.ID, &diary.Title, &diary.Description); err != nil {
+		dr := repository.NewDiaryRepository(db)
+		diary, err := dr.FindByID(r.Context(), int64(ID))
+
+		if err != nil {
 			w.WriteHeader(http.StatusNotFound)
-			return
 		}
 
 		fmt.Fprintln(w, diary)
@@ -149,24 +142,13 @@ func getDiary(db *sql.DB) http.Handler {
 
 func getDiaryList(db *sql.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		rows, err := db.Query("SELECT id, title, description FROM diaries")
+		dr := repository.NewDiaryRepository(db)
+		diaries, err := dr.FindAll(r.Context())
+
 		if err != nil {
 			log.Fatalf("diariesの取得に失敗しました。 %v", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
-		}
-
-		defer rows.Close()
-
-		var diaries []*Diary
-		for rows.Next() {
-			var diary Diary
-			if err := rows.Scan(&diary.ID, &diary.Title, &diary.Description); err != nil {
-				log.Fatalf("diariesの取得に失敗しました。 %v", err)
-				w.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-			diaries = append(diaries, &diary)
 		}
 
 		json, err := json.Marshal(diaries)
@@ -176,6 +158,11 @@ func getDiaryList(db *sql.DB) http.Handler {
 			return
 		}
 
-		fmt.Fprintln(w, string(json))
+		if b := string(json); b == "null" {
+			w.WriteHeader(http.StatusNoContent)
+			fmt.Fprintln(w, "")
+		} else {
+			fmt.Fprintln(w, string(json))
+		}
 	})
 }
