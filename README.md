@@ -15,6 +15,9 @@ Go言語とDockerの学習を目的としています。
 余裕があればfrontendも作成したいと思います。
 
 ## 使い方
+
+### 起動方法
+
 1. Docker Desktop for Macをインストールしてください。
 1. このリポジトリをgit cloneしてください。
 1. diaries-appディレクトリに移動して、docker-composeで起動してください。
@@ -22,6 +25,13 @@ Go言語とDockerの学習を目的としています。
 cd diaries-app
 
 docker-compose up -d --build
+```
+
+### 停止方法
+
+diaries-appディレクトリ直下でdocker-composeで停止してください。
+```
+docker-compose down
 ```
 
 ## API一覧
@@ -33,8 +43,6 @@ docker-compose up -d --build
 | DELETE | http://localhost:8080/api/diary/{id}/delete | Delete    | 
 | GET    | http://localhost:8080/api/diary/{id}        | FindByID  | 
 | GET    | http://localhost:8080/api/diary             | FindAll   | 
-
-
 
 ## アーキテクチャ
 
@@ -54,7 +62,7 @@ docker-compose up -d --build
 ## ローカルのMySQLへのアクセス方法
 
 ```
-docker-compose exec wwgt-diary-db mysql wwgt-diary -u wwgt-diary -p
+docker exec -it wwgt-diary-db mysql wwgt-diary -u wwgt-diary -p
 
 Enter password: wwgt-diary
 ```
