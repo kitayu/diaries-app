@@ -21,5 +21,45 @@ Go言語とDockerの学習を目的としています。
 ```
 cd diaries-app
 
-docker-compose up -d
+docker-compose up -d --build
+```
+
+## API一覧
+
+| Method | URL                                         | Interface |
+| :----- | :------------------------------------------ | :-------- |
+| POST   | http://localhost:8080/api/diary             | Store     |
+| PUT    | http://localhost:8080/api/diary/{id}        | Update    | 
+| DELETE | http://localhost:8080/api/diary/{id}/delete | Delete    | 
+| GET    | http://localhost:8080/api/diary/{id}        | FindByID  | 
+| GET    | http://localhost:8080/api/diary             | FindAll   | 
+
+
+
+## アーキテクチャ
+
+クリーンアーキテクチャで実装されています。
+
+## データベース設計
+
+### MySQL
+
+| Field       | Type            | Null | Key  | Default           | Extra             |
+| :---------- | :-------------- | :----| :--- | :---------------- | :---------------- |
+| id          | bigint unsigned | NO   | PRI  | NULL              | auto_increment    |
+| title       | varchar(128)    | NO   |      | NULL              |                   |
+| description | text            | NO   |      | NULL              |                   |
+| created_at  | timestamp       | YES  |      | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+
+## ローカルのMySQLへのアクセス方法
+
+```
+docker-compose exec wwgt-diary-db mysql wwgt-diary -u wwgt-diary -p
+
+Enter password: wwgt-diary
+```
+
+### diariesのデータ確認
+```
+SELECT * FROM diaries;
 ```
