@@ -54,6 +54,8 @@ services:
       context: .
       dockerfile: docker/server/frontend/Dockerfile
     tty: true
+    networks:
+      - default
     volumes:
       - ./frontend/react-diary-app:/app/react
     ports:
