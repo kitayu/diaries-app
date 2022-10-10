@@ -47,3 +47,14 @@ services:
       - default
     ports:
       - "8080:8080"
+  frontend-server:
+    container_name: wwgt-diary-frontend-server
+    command: npm start
+    build:
+      context: .
+      dockerfile: docker/server/frontend/Dockerfile
+    tty: true
+    volumes:
+      - ./frontend/react-diary-app:/app/react
+    ports:
+      - 3000:3000
