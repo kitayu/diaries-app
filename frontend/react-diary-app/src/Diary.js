@@ -1,7 +1,8 @@
+import { Td, Tr } from '@chakra-ui/react'
 import React from 'react'
 
-export const Diary = ({title}) => {
+export const Diary = ({no, title}) => {
   return (
-	<div>{title}</div>
+    <Tr><Td>{no}</Td><Td>{title}</Td></Tr>
   )
 }

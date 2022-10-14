@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
 import './App.css';
 import { DiaryList } from './DiaryList';
 
 function App() {
   return (
-    <div>
+    <ChakraProvider>
       <DiaryList />
-    </div>
+    </ChakraProvider>
   );
 }
 
