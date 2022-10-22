@@ -49,7 +49,7 @@ services:
       - "8080:8080"
   frontend-server:
     container_name: wwgt-diary-frontend-server
-    command: npm start
+    command: sh -c "npm install && npm start"
     build:
       context: .
       dockerfile: docker/server/frontend/Dockerfile
@@ -57,6 +57,8 @@ services:
     networks:
       - default
     volumes:
-      - ./frontend/react-diary-app:/app/react
+      - ./react-diary-app/src:/app/react/src
+      - ./react-diary-app/public:/app/react/public
+      - ./react-diary-app/node_modules:/app/react/node_modules
     ports:
       - 3000:3000
