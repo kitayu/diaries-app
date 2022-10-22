@@ -1,9 +1,9 @@
 FROM golang:1.17
 
 WORKDIR /wwgt-diary-server
-COPY backend/go.mod backend/go.sum ./
+COPY go-diaries/go.mod go-diaries/go.sum ./
 RUN go mod download
-COPY backend .
+COPY go-diaries .
 
 RUN go build -o main .
 EXPOSE 8080

@@ -1,5 +1,4 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import './App.css';
 import { DiaryList } from './DiaryList';
 import Header from './Header';
 

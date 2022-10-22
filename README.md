@@ -8,11 +8,11 @@
 - DBはMYSQLを利用している
 - docker-composeの定義など一部のdocker関連の定義を変更しています。
 - ディレクトリ構成を変更しています。
+- フロントエンドについても作成しています。
 
 ## 目的
 
-Go言語とDockerの学習を目的としています。
-余裕があればfrontendも作成したいと思います。
+Go言語とReact、Dockerの学習を目的としています。
 
 ## 使い方
 
@@ -24,7 +24,7 @@ Go言語とDockerの学習を目的としています。
 ```
 cd diaries-app
 
-docker-compose up -d --build
+docker-compose up -d
 ```
 
 ### 停止方法
@@ -34,49 +34,7 @@ diaries-appディレクトリ直下でdocker-composeで停止してください�
 docker-compose down
 ```
 
-## API一覧
-
-| Method | URL                                         | Interface |
-| :----- | :------------------------------------------ | :-------- |
-| POST   | http://localhost:8080/api/diary             | Store     |
-| PUT    | http://localhost:8080/api/diary/{id}        | Update    | 
-| DELETE | http://localhost:8080/api/diary/{id}/delete | Delete    | 
-| GET    | http://localhost:8080/api/diary/{id}        | FindByID  | 
-| GET    | http://localhost:8080/api/diaries           | FindAll   | 
-
-### API呼出の例
-{id}にはデータのidを指定する 例えば 1
-
-#### 登録
-```
-curl -i -X POST -H "Content-Type=application/json;Charset=UTF-8" \
--d '{"title":"英語", "description":"英語30分勉強したよ"}' http://localhost:8080/api/diary
-```
-
-#### 更新
-```
-curl -i -X PUT -H "Content-Type=application/json;Charset=UTF-8" \
--d '{"title":"英語", "description":"英語30分勉強したよ"}' http://localhost:8080/api/diary/{id}
-```
-
-#### 削除
-```
-curl -i -X DELETE -H "Content-Type=application/json;Charset=UTF-8" \
-http://localhost:8080/api/diary/{id}/delete
-```
-
-#### 取得
-```
-curl -i -X GET -H "Content-Type=application/json;Charset=UTF-8" \
-http://localhost:8080/api/diary/{id}
-```
-
-#### 一覧取得
-```
-curl -i -X GET -H "Content-Type=application/json;Charset=UTF-8" \
-http://localhost:8080/api/diaries
-```
-
+# go-diary
 
 ## アーキテクチャ
 
@@ -105,3 +63,7 @@ Enter password: wwgt-diary
 ```
 SELECT * FROM diaries;
 ```
+
+
+## 画面へのアクセス方法
+起動後にhttp://localhost:3000にブラウザでアクセスしてください。
