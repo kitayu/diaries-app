@@ -27,7 +27,7 @@ func NewCreateDiaryInputPortRequest(r *http.Request) (*diary.CreateDiaryInputPor
 }
 
 type updateDiaryRequestBody struct {
-	ID          int64  `json:"ID"`
+	ID          int64  `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }

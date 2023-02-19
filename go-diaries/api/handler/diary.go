@@ -7,13 +7,11 @@ import (
 
 	"github.com/kitayu/go-diaries/api/adapter"
 	"github.com/kitayu/go-diaries/api/presenter"
-	"github.com/kitayu/go-diaries/middleware"
 	"github.com/kitayu/go-diaries/usecase/diary"
 )
 
 func NewCreateDiaryHandler(du *diary.CreateDiaryUsecase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		middleware.CorsMiddleware(w)
 		// Adapter
 		input, err := adapter.NewCreateDiaryInputPortRequest(r)
 		if err != nil {
@@ -44,7 +42,6 @@ func NewCreateDiaryHandler(du *diary.CreateDiaryUsecase) http.Handler {
 
 func NewUpdateDiaryHandler(du *diary.UpdateDiaryUsecase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		middleware.CorsMiddleware(w)
 		// Adapter
 		input, err := adapter.NewUpdateDiaryInputPortRequest(r)
 
@@ -76,7 +73,6 @@ func NewUpdateDiaryHandler(du *diary.UpdateDiaryUsecase) http.Handler {
 
 func NewDeleteDiaryHandler(du *diary.DeleteDiaryUsecase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		middleware.CorsMiddleware(w)
 		// Adapter
 		input, err := adapter.NewDeleteDiaryInputPortRequest(r)
 
@@ -102,7 +98,6 @@ func NewDeleteDiaryHandler(du *diary.DeleteDiaryUsecase) http.Handler {
 
 func NewGetDiaryHandler(du *diary.GetDiaryUsecase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		middleware.CorsMiddleware(w)
 		// Adapter
 		input, err := adapter.NewGetDiaryInputPortRequest(r)
 
@@ -134,7 +129,6 @@ func NewGetDiaryHandler(du *diary.GetDiaryUsecase) http.Handler {
 
 func NewListDiaryHandler(du *diary.ListDiaryUsecase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		middleware.CorsMiddleware(w)
 		// Adapter
 
 		// Usecase
