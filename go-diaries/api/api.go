@@ -18,11 +18,11 @@ func BuildRouter(db *sql.DB) *mux.Router {
 func buildProjectRoutes(r *mux.Router, db *sql.DB) {
 	dr := repository.NewDiaryRepository(db)
 	r.Handle("/diary", handler.NewCreateDiaryHandler(
-		diary.NewCreateDiaryUsecase(dr))).Methods("POST")
+		diary.NewCreateDiaryUsecase(dr))).Methods("POST", "OPTIONS")
 	r.Handle("/diary/{id}", handler.NewUpdateDiaryHandler(
-		diary.NewUpdateDiaryUsecase(dr))).Methods("PUT")
+		diary.NewUpdateDiaryUsecase(dr))).Methods("PUT", "OPTIONS")
 	r.Handle("/diary/{id}/delete", handler.NewDeleteDiaryHandler(
-		diary.NewDeleteDiaryUsecase(dr))).Methods("DELETE")
+		diary.NewDeleteDiaryUsecase(dr))).Methods("DELETE", "OPTIONS")
 	r.Handle("/diary/{id}", handler.NewGetDiaryHandler(
 		diary.NewGetDiaryUsecase(dr))).Methods("GET")
 	r.Handle("/diaries", handler.NewListDiaryHandler(
